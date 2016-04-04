@@ -16,18 +16,18 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RecentlyRated extends AppCompatActivity {
-
-    String username;
+    /**
+     * the username
+     */
+    private String username;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recently_rated);
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         username = intent.getStringExtra("USER_NAME");
         new DispRating().execute("https://pandango.herokuapp.com/dispRecentRated/" + username);
     }
@@ -44,7 +44,7 @@ public class RecentlyRated extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -54,10 +54,25 @@ public class RecentlyRated extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * goes back home
+     * @param view the view
+     */
+    public void goBackHome(View view) {
+        final Intent intent = new Intent(this, Home.class);
+        intent.putExtra("USER_NAME", username);
+        startActivity(intent);
+    }
+
     private class DispRating extends AsyncTask<String, Long, String> {
+        /**
+         * The request is made
+         * @param urls The url
+         * @return the response
+         */
         protected String doInBackground(String... urls) {
             try {
-                HttpRequest request = HttpRequest.get(urls[0]);
+                final HttpRequest request = HttpRequest.get(urls[0]);
                 String result = null;
                 if (request.ok()) {
                     result = request.body();
@@ -69,24 +84,32 @@ public class RecentlyRated extends AppCompatActivity {
             }
         }
 
+        /**
+         * the progress of the request
+         * @param progress the progress
+         */
         protected void onProgressUpdate(Long... progress) {
             //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
         }
 
+        /**
+         * The response to the request
+         * @param file The response
+         */
         protected void onPostExecute(String file) {
             if (file != null) {
                 Log.d("RESULT", file);
-                ListView lv = (ListView) findViewById(R.id.list_recently_rated);
+                final ListView lv = (ListView) findViewById(R.id.list_recently_rated);
                 try {
-                    JSONArray jsA = new JSONArray(file);
-                    ArrayList<String> mainMovieList = new ArrayList<String>();
+                    final JSONArray jsA = new JSONArray(file);
+                    final ArrayList<String> mainMovieList = new ArrayList<String>();
                     JSONObject obj1 = null;
                     for (int i = 0; i < jsA.length(); i++) {
                         try {
                             obj1 = jsA.getJSONObject(i);
                             mainMovieList.add(obj1.getString("movie_name") + ": Rating = " + obj1.getString("rating"));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.d("MUST", "MUST");
                         }
                     }
                     lv.setAdapter(new ArrayAdapter<String>(RecentlyRated.this,
@@ -95,16 +118,10 @@ public class RecentlyRated extends AppCompatActivity {
                     Log.d("NULL", "NULL");
                 }
 
-            }
-            else {
+            } else {
                 Log.d("MyApp", "Download failed");
             }
         }
     }
 
-    public void goBackHome(View view) {
-        Intent intent = new Intent(this, Home.class);
-        intent.putExtra("USER_NAME", username);
-        startActivity(intent);
-    }
 }

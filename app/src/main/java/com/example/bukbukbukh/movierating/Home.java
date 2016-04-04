@@ -16,8 +16,21 @@ import org.json.JSONObject;
 
 public class Home extends AppCompatActivity {
 
-    String username;
-    String major;
+    /**
+     * the constant to pass between Intents
+     */
+    private static final String USER_NAME = "USER_NAME";
+
+    /**
+     * the username to pass between intents
+     */
+    private String username;
+
+    /**
+     * the major within this activity
+     */
+    private String major;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,10 +38,10 @@ public class Home extends AppCompatActivity {
         /**
          * This code in the oncreate method stores the username to reference the database for any further information
          */
-        Intent intent = getIntent();
-        username = intent.getStringExtra("USER_NAME");
+        final Intent intent = getIntent();
+        username = intent.getStringExtra(USER_NAME);
         major = intent.getStringExtra("MAJOR");
-        TextView dispUserName = (TextView) findViewById(R.id.disp_username);
+        final TextView dispUserName = (TextView) findViewById(R.id.disp_username);
         dispUserName.setText("Welcome " + username);
         //Log.d("anyString", username);
 
@@ -46,7 +59,7 @@ public class Home extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -56,76 +69,14 @@ public class Home extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class Logout extends AsyncTask<String, Long, String> {
-        protected String doInBackground(String... urls) {
-            try {
 
-                HttpRequest request = HttpRequest.post(urls[0]);
-                String result = null;
-                if (request.ok()) {
-                    result = request.body();
-                }
-                return result;
-            } catch (HttpRequest.HttpRequestException exception) {
-                return null;
-            }
-        }
 
-        protected void onProgressUpdate(Long... progress) {
-            //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
-        }
 
-        protected void onPostExecute(String file) {
-            if (file != null) {
-                Intent intent = new Intent(Home.this, WelcomeScreen.class);
-                startActivity(intent);
-            }
-            else {
-                Log.d("MyApp", "Download failed");
-            }
-        }
-    }
-
-    private class GetLoginAndMajor extends AsyncTask<String, Long, String> {
-        protected String doInBackground(String... urls) {
-            try {
-
-                HttpRequest request = HttpRequest.get(urls[0]);
-                String result = null;
-                if (request.ok()) {
-                    result = request.body();
-                }
-                return result;
-            } catch (HttpRequest.HttpRequestException exception) {
-                return null;
-            }
-        }
-
-        protected void onProgressUpdate(Long... progress) {
-            //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
-        }
-
-        protected void onPostExecute(String file) {
-            if (file != null) {
-                try {
-                    JSONArray arr = new JSONArray(file);
-                    JSONObject obj = arr.getJSONObject(0);
-                    username = obj.getString("username");
-                    major = obj.getString("major");
-                } catch (JSONException j) {
-
-                }
-            }
-            else {
-                Log.d("MyApp", "Download failed");
-            }
-        }
-    }
 
 
     /**
      * Making an http request to change the loginstatus to 0 after the logout button is pressed
-     * @param view
+     * @param view The view
      */
     public void logout(View view) {
         new Logout().execute("https://pandango.herokuapp.com/changeLoginStatus/" + username);
@@ -134,30 +85,167 @@ public class Home extends AppCompatActivity {
 
     /**
      * Transitions to the profile page
-     * @param view
+     * @param view the view
      */
     public void goProfilePage(View view) {
-        Intent intent = new Intent(this, mainProfilePage.class);
-        intent.putExtra("USER_NAME", username);
+        final Intent intent = new Intent(this, MainProfilePage.class);
+        intent.putExtra(USER_NAME, username);
         startActivity(intent);
     }
 
+    /**
+     * Transitions to the search pages
+     * @param view the view
+     */
     public void goToSearchPages(View view) {
-        Intent intent = new Intent(this, SearchPages.class);
-        intent.putExtra("USER_NAME", username);
+        final Intent intent = new Intent(this, SearchPages.class);
+        intent.putExtra(USER_NAME, username);
         intent.putExtra("MAJOR", major);
         startActivity(intent);
     }
 
+    /**
+     * Transitions to the rating page
+     * @param view the view
+     */
     public void goRatePage(View view) {
-        Intent intent = new Intent(this, RateMovie.class);
-        intent.putExtra("USER_NAME", username);
+        final Intent intent = new Intent(this, RateMovie.class);
+        intent.putExtra(USER_NAME, username);
         startActivity(intent);
     }
 
+    /**
+     * Transitions to the recently rated page
+     * @param view the view
+     */
     public void goRecentlyRated(View view) {
-        Intent intent = new Intent(this, RecentlyRated.class);
-        intent.putExtra("USER_NAME", username);
+        final Intent intent = new Intent(this, RecentlyRated.class);
+        intent.putExtra(USER_NAME, username);
         startActivity(intent);
+    }
+
+    /**
+     * get User Name
+     * @return returns the username
+     */
+    public String getUserName() {
+        return username;
+    }
+
+
+    /**
+     * Set username
+     * @param any anyString
+     */
+    public void setUserName(String any) {
+        username = any;
+    }
+
+
+    /**
+     * get Major
+     * @return returns the major
+     */
+    public String getMajor() {
+        return major;
+    }
+
+
+    /**
+     * Set the major to anyString
+     * @param any anyString
+     */
+    public void setMajor(String any) {
+        major = any;
+    }
+
+    private class GetLoginAndMajor extends AsyncTask<String, Long, String> {
+        /**
+         * Do request in background
+         * @param urls The url to request from
+         * @return Response
+         */
+        protected String doInBackground(String... urls) {
+            try {
+
+                final HttpRequest request = HttpRequest.get(urls[0]);
+                String result = null;
+                if (request.ok()) {
+                    result = request.body();
+                }
+                return result;
+            } catch (HttpRequest.HttpRequestException exception) {
+                return null;
+            }
+        }
+
+        /**
+         * The progress of request
+         * @param progress The progress of request
+         */
+        protected void onProgressUpdate(Long... progress) {
+            //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
+        }
+
+        /**
+         * The response execution
+         * @param file The response
+         */
+        protected void onPostExecute(String file) {
+            if (file != null) {
+                try {
+                    final JSONArray arr = new JSONArray(file);
+                    final JSONObject obj = arr.getJSONObject(0);
+                    username = obj.getString("username");
+                    major = obj.getString("major");
+                } catch (JSONException j) {
+                    Log.d("MUST HAVE", "MUST HAVE");
+                }
+            } else {
+                Log.d("MyApp", "Download failed");
+            }
+        }
+    }
+
+    private class Logout extends AsyncTask<String, Long, String> {
+        /**
+         * the request
+         * @param urls The url
+         * @return The response
+         */
+        protected String doInBackground(String... urls) {
+            try {
+
+                final HttpRequest request = HttpRequest.post(urls[0]);
+                String result = null;
+                if (request.ok()) {
+                    result = request.body();
+                }
+                return result;
+            } catch (HttpRequest.HttpRequestException exception) {
+                return null;
+            }
+        }
+
+        /**
+         *
+         * @param progress The progress of the request
+         */
+        protected void onProgressUpdate(Long... progress) {
+            //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
+        }
+
+        /**
+         * The response
+         * @param file The response file
+         */
+        protected void onPostExecute(String file) {
+            if (file != null) {
+                final Intent intent = new Intent(Home.this, WelcomeScreen.class);
+                startActivity(intent);
+            } else {
+                Log.d("MyApp", "Download failed");
+            }
+        }
     }
 }

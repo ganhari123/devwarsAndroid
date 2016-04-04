@@ -12,9 +12,14 @@ import android.os.Bundle;
  */
 public class LoginStatus extends DialogFragment {
 
+    /**
+     *
+     * @param title The title of the dialog box
+     * @return The Dialog Entry
+     */
     public static LoginStatus newInstance(int title) {
-        LoginStatus frag = new LoginStatus();
-        Bundle args = new Bundle();
+        final LoginStatus frag = new LoginStatus();
+        final Bundle args = new Bundle();
         args.putInt("title", title);
         frag.setArguments(args);
         return frag;
@@ -24,9 +29,9 @@ public class LoginStatus extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
 
-        int title = getArguments().getInt("title");
+        final int title = getArguments().getInt("title");
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(title)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {

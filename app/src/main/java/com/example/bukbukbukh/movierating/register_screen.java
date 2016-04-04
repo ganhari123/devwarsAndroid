@@ -13,15 +13,16 @@ import android.widget.EditText;
 import java.util.HashMap;
 import java.util.Map;
 
-public class register_screen extends AppCompatActivity {
+public class Register_screen extends AppCompatActivity {
+
+    private static final String EMPTY = "";
 
     /**
      * declaring variables that can be used all throughout the program
      */
-    String name;
-    String username;
-    String password;
-    User globUser;
+    private String name;
+    private String username;
+    private String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class register_screen extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -52,6 +53,39 @@ public class register_screen extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Registers a user by making a http call to the server and adding to the database
+     * @param view
+     */
+    public void registerUser(View view) {
+        final EditText ed1 = (EditText) findViewById(R.id.first_name);
+        final EditText ed2 = (EditText) findViewById(R.id.last_name);
+        final EditText ed3 = (EditText) findViewById(R.id.user_n);
+        final EditText ed4 = (EditText) findViewById(R.id.pass);
+        final EditText ed5 = (EditText) findViewById(R.id.conf_pass);
+        name = ed1.getText().toString() + " " + ed2.getText().toString();
+        username = ed3.getText().toString();
+        password = ed4.getText().toString();
+        final User globUser = new User(ed1.getText().toString(), ed1.getText().toString(), username, password);
+        Log.d("ID", Integer.toString(globUser.getNumOfUsers()));
+        if (ed5.getText().toString().equals(ed4.getText().toString())) {
+            new RegisterTask().execute("https://pandango.herokuapp.com/userRegistration");
+        } else {
+            final LoginStatus checkRegisterStatus = LoginStatus.newInstance(R.string.register_status1);
+            checkRegisterStatus.show(getFragmentManager(), "dialog");
+        }
+
+    }
+
+
+    /**
+     * Cancels the registration and returns to the Welcome screen
+     * @param view
+     */
+    public void cancelButtonReg(View view) {
+        final Intent intent = new Intent(this, WelcomeScreen.class);
+        startActivity(intent);
+    }
 
     /**
      * An async subclass that completes the http post request for registering a user
@@ -59,12 +93,12 @@ public class register_screen extends AppCompatActivity {
     private class RegisterTask extends AsyncTask<String, Long, String> {
         protected String doInBackground(String... urls) {
             try {
-                Map<String, String> keyValuePairs = new HashMap<String, String>();
+                final Map<String, String> keyValuePairs = new HashMap<String, String>();
                 //keyValuePairs.put("id", Integer.toString(globUser.getNumOfUsers()));
                 keyValuePairs.put("name", name);
                 keyValuePairs.put("username", username);
                 keyValuePairs.put("password", password);
-                HttpRequest request = HttpRequest.post(urls[0]).form(keyValuePairs);
+                final HttpRequest request = HttpRequest.post(urls[0]).form(keyValuePairs);
                 String result = null;
                 if (request.ok()) {
                     result = request.body();
@@ -81,63 +115,28 @@ public class register_screen extends AppCompatActivity {
 
         protected void onPostExecute(String file) {
             if (file != null) {
-                if (file.equals("User already added")) {
-                    LoginStatus login = LoginStatus.newInstance(R.string.register_status2);
+                if ("User already added".equals(file)) {
+                    final LoginStatus login = LoginStatus.newInstance(R.string.register_status2);
                     login.show(getFragmentManager(), "dialog");
-                } else if (file.equals("user added sucessfully!")) {
-                    LoginStatus login = LoginStatus.newInstance(R.string.register_status3);
+                } else if ("user added sucessfully!".equals(file)) {
+                    final LoginStatus login = LoginStatus.newInstance(R.string.register_status3);
                     login.show(getFragmentManager(), "dialog");
                 }
-                EditText ed1 = (EditText) findViewById(R.id.first_name);
-                EditText ed2 = (EditText) findViewById(R.id.last_name);
-                EditText ed3 = (EditText) findViewById(R.id.user_n);
-                EditText ed4 = (EditText) findViewById(R.id.pass);
-                EditText ed5 = (EditText) findViewById(R.id.conf_pass);
-                ed1.setText("");
-                ed2.setText("");
-                ed3.setText("");
-                ed4.setText("");
-                ed5.setText("");
+                final EditText ed1 = (EditText) findViewById(R.id.first_name);
+                final EditText ed2 = (EditText) findViewById(R.id.last_name);
+                final EditText ed3 = (EditText) findViewById(R.id.user_n);
+                final EditText ed4 = (EditText) findViewById(R.id.pass);
+                final EditText ed5 = (EditText) findViewById(R.id.conf_pass);
+                ed1.setText(EMPTY);
+                ed2.setText(EMPTY);
+                ed3.setText(EMPTY);
+                ed4.setText(EMPTY);
+                ed5.setText(EMPTY);
 
             }
             else {
                 Log.d("MyApp", "Download failed");
             }
         }
-    }
-
-
-    /**
-     * Registers a user by making a http call to the server and adding to the database
-     * @param view
-     */
-    public void registerUser(View view) {
-        EditText ed1 = (EditText) findViewById(R.id.first_name);
-        EditText ed2 = (EditText) findViewById(R.id.last_name);
-        EditText ed3 = (EditText) findViewById(R.id.user_n);
-        EditText ed4 = (EditText) findViewById(R.id.pass);
-        EditText ed5 = (EditText) findViewById(R.id.conf_pass);
-        name = ed1.getText().toString() + " " + ed2.getText().toString();
-        username = ed3.getText().toString();
-        password = ed4.getText().toString();
-        globUser = new User(ed1.getText().toString(), ed1.getText().toString(), username, password);
-        Log.d("ID", Integer.toString(globUser.getNumOfUsers()));
-        if (ed5.getText().toString().equals(ed4.getText().toString())) {
-            new RegisterTask().execute("https://pandango.herokuapp.com/userRegistration");
-        } else {
-            LoginStatus checkRegisterStatus = LoginStatus.newInstance(R.string.register_status1);
-            checkRegisterStatus.show(getFragmentManager(), "dialog");
-        }
-
-    }
-
-
-    /**
-     * Cancels the registration and returns to the Welcome screen
-     * @param view
-     */
-    public void cancelButtonReg(View view) {
-        Intent intent = new Intent(this, WelcomeScreen.class);
-        startActivity(intent);
     }
 }

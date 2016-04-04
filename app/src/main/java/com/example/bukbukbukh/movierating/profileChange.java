@@ -12,13 +12,19 @@ import android.view.LayoutInflater;
  * A class to display a dialog related to profile changes
  * Yet to be implemented completely
  */
-public class profileChange extends DialogFragment {
+public class ProfileChange extends DialogFragment {
 
     //String usern;
 
-    public static profileChange newInstance(int title, String username) {
-        profileChange frag = new profileChange();
-        Bundle args = new Bundle();
+    /**
+     *
+     * @param title The title of the dialog
+     * @param username The username passed into dialog box
+     * @return profileChange dialog
+     */
+    public static ProfileChange newInstance(int title, String username) {
+        final ProfileChange frag = new ProfileChange();
+        final Bundle args = new Bundle();
         args.putInt("title", title);
         frag.setArguments(args);
         return frag;
@@ -28,9 +34,9 @@ public class profileChange extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         // Use the Builder class for convenient dialog construction
 
-        int title = getArguments().getInt("title");
-        LayoutInflater inflater = getActivity().getLayoutInflater();
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        final int title = getArguments().getInt("title");
+        final LayoutInflater inflater = getActivity().getLayoutInflater();
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setView(inflater.inflate(R.layout.change_password_layout, null));
         builder.setTitle(title)
                 .setPositiveButton("ok", new DialogInterface.OnClickListener() {
