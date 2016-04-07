@@ -14,14 +14,22 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Register_screen extends AppCompatActivity {
-
+    /**
+     * an empty string
+     */
     private static final String EMPTY = "";
 
     /**
      * declaring variables that can be used all throughout the program
      */
     private String name;
+    /**
+     * username
+     */
     private String username;
+    /**
+     * password
+     */
     private String password;
 
     @Override
@@ -55,7 +63,7 @@ public class Register_screen extends AppCompatActivity {
 
     /**
      * Registers a user by making a http call to the server and adding to the database
-     * @param view
+     * @param view the View
      */
     public void registerUser(View view) {
         final EditText ed1 = (EditText) findViewById(R.id.first_name);
@@ -80,7 +88,7 @@ public class Register_screen extends AppCompatActivity {
 
     /**
      * Cancels the registration and returns to the Welcome screen
-     * @param view
+     * @param view the View
      */
     public void cancelButtonReg(View view) {
         final Intent intent = new Intent(this, WelcomeScreen.class);
@@ -91,6 +99,11 @@ public class Register_screen extends AppCompatActivity {
      * An async subclass that completes the http post request for registering a user
      */
     private class RegisterTask extends AsyncTask<String, Long, String> {
+        /**
+         * the request made on another thread
+         * @param urls The url
+         * @return the response
+         */
         protected String doInBackground(String... urls) {
             try {
                 final Map<String, String> keyValuePairs = new HashMap<String, String>();
@@ -109,10 +122,18 @@ public class Register_screen extends AppCompatActivity {
             }
         }
 
+        /**
+         * while the request is being made
+         * @param progress The progress
+         */
         protected void onProgressUpdate(Long... progress) {
             //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
         }
 
+        /**
+         * After the request has been made
+         * @param file The response
+         */
         protected void onPostExecute(String file) {
             if (file != null) {
                 if ("User already added".equals(file)) {
@@ -133,8 +154,7 @@ public class Register_screen extends AppCompatActivity {
                 ed4.setText(EMPTY);
                 ed5.setText(EMPTY);
 
-            }
-            else {
+            } else {
                 Log.d("MyApp", "Download failed");
             }
         }

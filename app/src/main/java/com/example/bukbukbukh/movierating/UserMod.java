@@ -17,12 +17,21 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class UserMod extends AppCompatActivity implements AdapterView.OnItemClickListener{
-
-    ArrayList<String> userList;
-    String username;
-    String major;
+    /**
+     * the user list
+     */
+    private List<String> userList;
+    /**
+     * username
+     */
+    private String username;
+    /**
+     * major
+     */
+    private String major;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,7 +53,7 @@ public class UserMod extends AppCompatActivity implements AdapterView.OnItemClic
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -54,11 +63,62 @@ public class UserMod extends AppCompatActivity implements AdapterView.OnItemClic
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * the on item click adapter
+     * @param parent The parent adapter
+     * @param view the view
+     * @param position the position of tapped item
+     * @param id the id
+     */
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        // An item was selected. You can retrieve the selected item using
+        // parent.getItemAtPosition(pos)
+        final Intent intent = new Intent(this, UserStatus.class);
+        final String cursor = (String) parent.getItemAtPosition(position);
+        intent.putExtra("USER_NAME", username);
+        intent.putExtra("MAJOR", major);
+        intent.putExtra("USER", cursor);
+        startActivity(intent);
+    }
+
+    /**
+     * added for Junit
+     * @return a string
+     */
+    public String lastAdded() {
+        final List<User> myList = User.getMyList();
+        if (myList.isEmpty()) {
+            return null;
+        } else {
+            final int size = myList.size();
+            return myList.get(size).getFirstName();
+        }
+    }
+
+    /**
+     * added for Junit
+     * @param user the user
+     * @param movie the movie
+     * @return the movie number
+     */
+    public static int hasRated(User user, String movie) {
+        if (user.getMovieList().containsKey(movie)) {
+            return user.getMovieList().get(movie);
+        } else {
+            return 0;
+        }
+    }
+
     private class UserList extends AsyncTask<String, Long, String> {
+        /**
+         * the request being made
+         * @param urls the url
+         * @return the response
+         */
         protected String doInBackground(String... urls) {
             try {
 
-                HttpRequest request = HttpRequest.get(urls[0]);
+                final HttpRequest request = HttpRequest.get(urls[0]);
                 String result = null;
                 if (request.ok()) {
                     result = request.body();
@@ -69,15 +129,23 @@ public class UserMod extends AppCompatActivity implements AdapterView.OnItemClic
             }
         }
 
+        /**
+         * while the request is being processed
+         * @param progress the progress
+         */
         protected void onProgressUpdate(Long... progress) {
             //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
         }
 
+        /**
+         * the activities after the request is made
+         * @param file the response
+         */
         protected void onPostExecute(String file) {
             if (file != null) {
                 try {
-                    JSONArray arr = new JSONArray(file);
-                    ListView lv = (ListView) findViewById(R.id.user_list);
+                    final JSONArray arr = new JSONArray(file);
+                    final ListView lv = (ListView) findViewById(R.id.user_list);
                     userList = new ArrayList<String>();
                     JSONObject obj1 = null;
                     for (int i = 0; i < arr.length(); i++) {
@@ -85,30 +153,19 @@ public class UserMod extends AppCompatActivity implements AdapterView.OnItemClic
                             obj1 = arr.getJSONObject(i);
                             userList.add(obj1.getString("username"));
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            Log.d("M", "M");
                         }
                     }
                     lv.setAdapter(new ArrayAdapter<String>(UserMod.this,
                             R.layout.list_item_movies, R.id.movieName, userList));
                     lv.setOnItemClickListener(UserMod.this);
                 } catch (JSONException j) {
-
+                    Log.d("MUST", "MUST");
                 }
-            }
-            else {
+            } else {
                 Log.d("MyApp", "Download failed");
             }
         }
     }
 
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        // An item was selected. You can retrieve the selected item using
-        // parent.getItemAtPosition(pos)
-        Intent intent = new Intent(this, UserStatus.class);
-        String cursor = (String) parent.getItemAtPosition(position);
-        intent.putExtra("USER_NAME", username);
-        intent.putExtra("MAJOR", major);
-        intent.putExtra("USER", cursor);
-        startActivity(intent);
-    }
 }

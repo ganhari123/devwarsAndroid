@@ -1,10 +1,8 @@
 package com.example.bukbukbukh.movierating;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,7 +28,7 @@ public class WelcomeScreen extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -42,21 +40,21 @@ public class WelcomeScreen extends AppCompatActivity {
 
     /** Go to Login Screen
      *
-     * @param view
+     * @param view the view
      */
     public void goLoginScreen(View view) {
 
-        Intent intent = new Intent(this, login_screen.class);
+        Intent intent = new Intent(this, Login_screen.class);
         startActivity(intent);
 
     }
 
     /** Goes to Register screen
      *
-     * @param view
+     * @param view the view
      */
     public void goRegisterScreen(View view) {
-        Intent intent = new Intent(this, register_screen.class);
+        final Intent intent = new Intent(this, Register_screen.class);
         startActivity(intent);
     }
 }

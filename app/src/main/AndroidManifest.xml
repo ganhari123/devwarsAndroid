@@ -47,11 +47,11 @@ http-request
         </dependency>
 
         <activity
-            android:name=".login_screen"
+            android:name=".Login_screen"
             android:label="@string/title_activity_login_screen" >
         </activity>
         <activity
-            android:name=".register_screen"
+            android:name=".Register_screen"
             android:label="@string/title_activity_register_screen" >
         </activity>
         <activity
@@ -67,7 +67,7 @@ http-request
             android:label="@string/title_activity_search_pages" >
         </activity>
         <activity
-            android:name=".mainProfilePage"
+            android:name=".MainProfilePage"
             android:label="@string/title_activity_main_profile_page" >
         </activity>
         <activity

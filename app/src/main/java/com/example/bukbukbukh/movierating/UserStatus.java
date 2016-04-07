@@ -10,10 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 
 public class UserStatus extends AppCompatActivity {
-
-    String username;
-    String major;
-    String user;
+    /**
+     * the username
+     */
+    private String username;
+    /**
+     * the major
+     */
+    private String major;
+    /**
+     * the username
+     */
+    private String user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +44,7 @@ public class UserStatus extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        final int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
@@ -46,11 +54,32 @@ public class UserStatus extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * ban user
+     * @param view the view
+     */
+    public void ban(View view) {
+        new ChangeStatusBan().execute("https://pandango.herokuapp.com/changeUserStatusBan/" + user);
+    }
+
+    /**
+     * make user active
+     * @param view the view
+     */
+    public void active(View view) {
+        new ChangeStatusBan().execute("https://pandango.herokuapp.com/changeUserStatusUnlock/" + user);
+    }
+
     private class ChangeStatusBan extends AsyncTask<String, Long, String> {
+        /**
+         * The request is made
+         * @param urls The url
+         * @return the Response
+         */
         protected String doInBackground(String... urls) {
             try {
 
-                HttpRequest request = HttpRequest.post(urls[0]);
+                final HttpRequest request = HttpRequest.post(urls[0]);
                 String result = null;
                 if (request.ok()) {
                     result = request.body();
@@ -61,26 +90,25 @@ public class UserStatus extends AppCompatActivity {
             }
         }
 
+        /**
+         * while request is being processed
+         * @param progress the progress
+         */
         protected void onProgressUpdate(Long... progress) {
             //Log.d("MyApp", "Downloaded bytes: " + progress[0]);
         }
 
+        /**
+         * after the request is made
+         * @param file the response
+         */
         protected void onPostExecute(String file) {
             if (file != null) {
-                Intent intent = new Intent(UserStatus.this, AdminHome.class);
+                final Intent intent = new Intent(UserStatus.this, AdminHome.class);
                 startActivity(intent);
-            }
-            else {
+            } else {
                 Log.d("MyApp", "Download failed");
             }
         }
-    }
-
-    public void ban(View view) {
-        new ChangeStatusBan().execute("https://pandango.herokuapp.com/changeUserStatusBan/" + user);
-    }
-
-    public void active(View view) {
-        new ChangeStatusBan().execute("https://pandango.herokuapp.com/changeUserStatusUnlock/" + user);
     }
 }
