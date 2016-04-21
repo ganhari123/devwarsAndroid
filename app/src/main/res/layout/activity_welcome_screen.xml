@@ -3,7 +3,8 @@
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".WelcomeScreen">
+    android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".WelcomeScreen"
+    android:background="#000000">
 
     <Button
         android:layout_width="wrap_content"
@@ -11,9 +12,17 @@
         android:text="Login"
         android:id="@+id/login_button"
         android:onClick="goLoginScreen"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:background="#ad252c"
+        android:elegantTextHeight="false"
+        android:textColor="#FFFFFFFF"
+        android:layout_alignTop="@+id/register_button"
+        android:layout_toStartOf="@+id/welcome"
+        android:paddingBottom="10dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:textSize="20dp"
+        android:width="120dp"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -21,16 +30,37 @@
         android:text="Register"
         android:id="@+id/register_button"
         android:onClick="goRegisterScreen"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:background="#ad252c"
+        android:layout_marginBottom="71dp"
+        android:textColor="#FFFFFFFF"
+        android:layout_alignParentBottom="true"
+        android:layout_toEndOf="@+id/welcome"
+        android:paddingBottom="10dp"
+        android:paddingRight="20dp"
+        android:paddingTop="10dp"
+        android:paddingLeft="20dp"
+        android:textSize="20dp"
+        android:width="120dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Welcome to the Movie Rater"
+        android:text="PANDANGO"
         android:id="@+id/welcome"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="65dp"
+        android:textColor="#ad252c"
+        android:shadowColor="#ad252c"
+        android:fontFamily="@string/title_activity_register_screen" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New Button"
+        android:id="@+id/button3"
+        android:layout_below="@+id/login_button"
+        android:layout_alignParentEnd="true"
+        android:onClick="testNewHome"/>
 </RelativeLayout>

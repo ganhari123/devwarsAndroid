@@ -17,7 +17,7 @@ public class UserStatus extends AppCompatActivity {
     /**
      * the major
      */
-    private String major;
+    //private String major;
     /**
      * the username
      */
@@ -27,7 +27,7 @@ public class UserStatus extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_status);
         username = getIntent().getStringExtra("USER_NAME");
-        major = getIntent().getStringExtra("MAJOR");
+        //major = getIntent().getStringExtra("MAJOR");
         user = getIntent().getStringExtra("USER");
 
     }

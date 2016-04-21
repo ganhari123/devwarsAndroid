@@ -1,5 +1,6 @@
 package com.example.bukbukbukh.movierating;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +15,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class Login_screen extends AppCompatActivity {
+public class Login_screen extends Activity {
 
     /**
      * Number of login attempts

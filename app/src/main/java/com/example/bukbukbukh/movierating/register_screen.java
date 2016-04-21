@@ -1,5 +1,6 @@
 package com.example.bukbukbukh.movierating;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import android.widget.EditText;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Register_screen extends AppCompatActivity {
+public class Register_screen extends Activity {
     /**
      * an empty string
      */
@@ -71,6 +72,13 @@ public class Register_screen extends AppCompatActivity {
         final EditText ed3 = (EditText) findViewById(R.id.user_n);
         final EditText ed4 = (EditText) findViewById(R.id.pass);
         final EditText ed5 = (EditText) findViewById(R.id.conf_pass);
+        if (ed1.getText().toString().equals("") || ed2.getText().toString().equals("")
+                || ed3.getText().toString().equals("") || ed4.getText().toString().equals("")
+                || ed4.getText().toString().equals("")) {
+            final LoginStatus checkRegisterStatus = LoginStatus.newInstance(R.string.register_status4);
+            checkRegisterStatus.show(getFragmentManager(), "dialog");
+            return;
+        }
         name = ed1.getText().toString() + " " + ed2.getText().toString();
         username = ed3.getText().toString();
         password = ed4.getText().toString();
